@@ -24,8 +24,8 @@ const Footer = () => {
 
       <Box pt="15px" pl={4}>
         <List>
-          {dataList.map((data) => (
-            <Link href={data.link} target="_blank" rel="noreferrer">
+          {dataList.map((data, i) => (
+            <Link key={i} href={data.link} target="_blank" rel="noreferrer">
               <ListItem
                 disablePadding
                 sx={{
