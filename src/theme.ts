@@ -30,5 +30,9 @@ export const themeSettings = {
       fontFamily: ["Bai Jamjuree", "sans-serif"].join(","),
       fontSize: 16,
     },
+    body1: {
+      fontFamily: ["Bai Jamjuree", "sans-serif"].join(","),
+      fontSize: 14,
+    }
   },
 };
