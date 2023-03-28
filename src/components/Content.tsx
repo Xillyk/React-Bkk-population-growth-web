@@ -268,7 +268,30 @@ const Content = () => {
                 layout="vertical"
                 barCategoryGap={1}
               >
-                <XAxis type="number" hide domain={[-5, 5]} />
+                <XAxis
+                  type="number"
+                  hide
+                  domain={() => {
+                    let filteredData = cloneSelectedDistrictDataset?.filter(
+                      (data) => data.year >= fromYear && data.year <= toYear
+                    )
+                    let min = filteredData![0].percentage
+                    let max = filteredData![0].percentage
+
+                    // find min, max
+                    for (let i = 0; i < filteredData!.length; i++) {
+                      if (min > filteredData![i].percentage) {
+                        min = filteredData![i].percentage
+                      }
+
+                      if (max < filteredData![i].percentage) {
+                        max = filteredData![i].percentage
+                      }
+                    }
+
+                    return [min - 0.1, max + 0.1]
+                  }}
+                />
                 <YAxis
                   dataKey="year"
                   tickLine={false}
