@@ -85,11 +85,6 @@ const Content = () => {
     setIsLoading(false);
   }, []);
 
-  useEffect(() => {
-    console.log("hey");
-    // setIsUpdate(true)
-  }, [selectedDistrict, fromYear, toYear]);
-
   return (
     <>
       <Typography variant="h3" fontWeight="bold">
