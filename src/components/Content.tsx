@@ -267,10 +267,24 @@ const Content = () => {
                 )}
                 layout="vertical"
                 barCategoryGap={1}
+                margin={{
+                  top: 10,
+                  right: 20,
+                  left: 0,
+                  bottom: 10,
+                }}
               >
                 <XAxis
                   type="number"
-                  hide
+                  orientation="top"
+                  interval={0}
+                  axisLine={false}
+                  tickFormatter={(v) => `${v}%`}
+                  tickLine={false}
+                  tick={{
+                    fill: "#FFFFFF",
+                    fontSize: "14px"
+                  }}
                   domain={() => {
                     let filteredData = cloneSelectedDistrictDataset?.filter(
                       (data) => data.year >= fromYear && data.year <= toYear
@@ -289,7 +303,7 @@ const Content = () => {
                       }
                     }
 
-                    return [min - 0.1, max + 0.1]
+                    return [min, max]
                   }}
                 />
                 <YAxis
