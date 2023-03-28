@@ -292,8 +292,8 @@ const Content = () => {
                     let filteredData = cloneSelectedDistrictDataset?.filter(
                       (data) => data.year >= fromYear && data.year <= toYear
                     )
-                    let min = filteredData![0].percentage
-                    let max = filteredData![0].percentage
+                    let min = 0
+                    let max = 0
 
                     // find min, max
                     for (let i = 0; i < filteredData!.length; i++) {
