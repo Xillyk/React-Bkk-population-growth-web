@@ -294,18 +294,19 @@ const Content = () => {
                     )
                     let min = 0
                     let max = 0
-
-                    // find min, max
-                    for (let i = 0; i < filteredData!.length; i++) {
-                      if (min > filteredData![i].percentage) {
-                        min = filteredData![i].percentage
-                      }
-
-                      if (max < filteredData![i].percentage) {
-                        max = filteredData![i].percentage
+                    
+                    if (filteredData) {
+                      // find min, max
+                      for (let i = 0; i < filteredData!.length; i++) {
+                        if (min > filteredData![i].percentage) {
+                          min = filteredData![i].percentage
+                        }
+  
+                        if (max < filteredData![i].percentage) {
+                          max = filteredData![i].percentage
+                        }
                       }
                     }
-
                     return [min, max]
                   }}
                 />
