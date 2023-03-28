@@ -299,8 +299,7 @@ const Content = () => {
                   strokeWidth={2}
                   domain={[fromYear, toYear]}
                   interval={0}
-                  tickCount={1}
-                  type="number"
+                  type="category"
                   style={{
                     padding: "5rem 0",
                   }}
