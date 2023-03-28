@@ -181,7 +181,7 @@ const Content = () => {
 
                       // set toYear available range
                       let editedDataset = cloneDataset?.map((data) => {
-                        if (data.year < fromYear) {
+                        if (data.year <= fromYear) {
                           data.isDisabled = true;
                         } else {
                           data.isDisabled = false;
