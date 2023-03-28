@@ -8,17 +8,12 @@ import {
 } from "@mui/material";
 import { useEffect, useState } from "react";
 import Papa from "papaparse";
-import {
-  ResponsiveContainer,
-  BarChart,
-  XAxis,
-  YAxis,
-  Bar
-} from "recharts";
+import { ResponsiveContainer, BarChart, XAxis, YAxis, Bar } from "recharts";
 
 type DistrictData = {
   year: number;
   percentage: number;
+  isDisabled: boolean;
 };
 
 type DistrictSummarizeData = {
@@ -31,11 +26,15 @@ const Content = () => {
   const theme = useTheme();
   const isAboveSmallScreens = useMediaQuery("(min-width: 800px)");
   const [isLoading, setIsLoading] = useState(true);
-  // const [isUpdate, setIsUpdate] = useState(false)
-  const [districtSummarizeDatas, setDistrictSummarizeDatas] =useState<DistrictSummarizeData[]>();
+  const [districtSummarizeDatas, setDistrictSummarizeDatas] =
+    useState<DistrictSummarizeData[]>();
   const [selectedDistrict, setSelectedDistrict] = useState<string>("");
-  const [selectedDistrictDataset, setSelectedDistrictDataset] =useState<DistrictData[]>();
-  const [cloneSelectedDistrictDataset, setCloneSelectedDistrictDataset] =useState<DistrictData[]>();
+
+  const [selectedDistrictDataset, setSelectedDistrictDataset] =
+    useState<DistrictData[]>();
+  const [cloneSelectedDistrictDataset, setCloneSelectedDistrictDataset] =
+    useState<DistrictData[]>();
+
   const [fromYear, setFromYear] = useState(0);
   const [toYear, setToYear] = useState(0);
 
@@ -62,6 +61,7 @@ const Content = () => {
               let data: DistrictData = {
                 year: +array[0],
                 percentage: +array[1].substring(0, array[1].length - 1),
+                isDisabled: false,
               };
               districtData.push(data);
             }
@@ -76,22 +76,19 @@ const Content = () => {
         // set range 2550-2559 as default range
         setSelectedDistrictDataset(tmpDistrictsData[4].data);
         setCloneSelectedDistrictDataset(tmpDistrictsData[4].data);
-        
-        setSelectedDistrict(tmpDistrictsData[4].name)
-        setFromYear(2550)
-        setToYear(2559)
+
+        setSelectedDistrict(tmpDistrictsData[4].name);
+        setFromYear(2550);
+        setToYear(2559);
       },
     });
     setIsLoading(false);
   }, []);
 
   useEffect(() => {
-    console.log("hey")
+    console.log("hey");
     // setIsUpdate(true)
-    
-    
-  }, [selectedDistrict, fromYear, toYear])
-  
+  }, [selectedDistrict, fromYear, toYear]);
 
   return (
     <>
@@ -125,7 +122,15 @@ const Content = () => {
                       (data: any) => data.name === districtName
                     );
                     let districtSummarizeData = districtSummarizeDatas![index];
-                    setSelectedDistrictDataset(districtSummarizeData.data)
+                    // set district dataset
+                    setSelectedDistrictDataset(districtSummarizeData.data);
+                    setCloneSelectedDistrictDataset(districtSummarizeData.data);
+
+                    // reset fromYear value
+                    setFromYear(2550);
+
+                    // reset toYear value
+                    setToYear(2559);
                   }}
                   color="info"
                   fullWidth={isAboveSmallScreens ? false : true}
@@ -141,7 +146,7 @@ const Content = () => {
                     },
                   }}
                 >
-                  {districtSummarizeDatas?.map((districtData: any) => (
+                  {districtSummarizeDatas?.map((districtData) => (
                     <MenuItem
                       key={districtData.dcode}
                       dense
@@ -169,9 +174,24 @@ const Content = () => {
                     id="select"
                     value={fromYear}
                     onChange={(event) => {
-                      let fromYear = +event.target.value
-                      setFromYear(fromYear)
+                      let fromYear = +event.target.value;
+                      setFromYear(fromYear);
 
+                      // reset toYear value
+                      setToYear(2559);
+
+                      let cloneDataset = cloneSelectedDistrictDataset;
+
+                      // set toYear available range
+                      let editedDataset = cloneDataset?.map((data) => {
+                        if (data.year < fromYear) {
+                          data.isDisabled = true;
+                        } else {
+                          data.isDisabled = false;
+                        }
+                        return data;
+                      });
+                      setSelectedDistrictDataset(editedDataset);
                     }}
                     color="info"
                     sx={{
@@ -186,7 +206,7 @@ const Content = () => {
                       },
                     }}
                   >
-                    {selectedDistrictDataset?.map((districtData: any) => (
+                    {selectedDistrictDataset?.map((districtData) => (
                       <MenuItem
                         key={districtData.year}
                         dense
@@ -209,17 +229,8 @@ const Content = () => {
                     id="select"
                     value={toYear}
                     onChange={(event) => {
-                      let toYear = +event.target.value
-                      setToYear(toYear)
-
-                      // reset
-                      setSelectedDistrictDataset(cloneSelectedDistrictDataset)
-
-                      // set new range
-                      // let index = selectedDistrictDataset.findIndex((data) => data.year === toYear)
-                      // console.log(selectedDistrictDataset)
-
-
+                      let toYear = +event.target.value;
+                      setToYear(toYear);
                     }}
                     color="info"
                     sx={{
@@ -234,11 +245,12 @@ const Content = () => {
                       },
                     }}
                   >
-                    {selectedDistrictDataset?.map((districtData: any) => (
+                    {selectedDistrictDataset?.map((districtData) => (
                       <MenuItem
                         key={districtData.year}
                         dense
                         value={districtData.year}
+                        disabled={districtData.isDisabled}
                         sx={{
                           color: "#000",
                         }}
@@ -252,18 +264,16 @@ const Content = () => {
             </Box>
           </Box>
           {/* CHART */}
-          <Box pt={3} width="100%" height="100%">
-            <ResponsiveContainer width="99%" height={300}>
+          <Box pt={3} width="100%" height={300}>
+            <ResponsiveContainer width="99%" height="100%">
               <BarChart
-                data={selectedDistrictDataset}
+                data={cloneSelectedDistrictDataset?.filter(
+                  (data) => data.year >= fromYear && data.year <= toYear
+                )}
                 layout="vertical"
                 barCategoryGap={1}
               >
-                <XAxis
-                  type="number"
-                  hide
-                  domain={[-5, 5]}
-                />
+                <XAxis type="number" hide domain={[-5, 5]} />
                 <YAxis
                   dataKey="year"
                   tickLine={false}
@@ -271,7 +281,7 @@ const Content = () => {
                   strokeWidth={2}
                   domain={[fromYear, toYear]}
                   interval={0}
-                  tickCount={10}
+                  tickCount={1}
                   type="number"
                   style={{
                     padding: "5rem 0",
