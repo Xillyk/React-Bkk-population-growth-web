@@ -109,6 +109,7 @@ const Content = () => {
               <Box>
                 <Select
                   id="select"
+                  defaultValue={selectedDistrict}
                   value={selectedDistrict}
                   onChange={(event) => {
                     let districtName = event.target.value;
@@ -167,6 +168,7 @@ const Content = () => {
                 <Box>
                   <Select
                     id="select"
+                    defaultValue={fromYear}
                     value={fromYear}
                     onChange={(event) => {
                       let fromYear = +event.target.value;
@@ -222,6 +224,7 @@ const Content = () => {
                 <Box ml={4}>
                   <Select
                     id="select"
+                    defaultValue={toYear}
                     value={toYear}
                     onChange={(event) => {
                       let toYear = +event.target.value;
